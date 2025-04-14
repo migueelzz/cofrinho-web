@@ -1,7 +1,4 @@
-'use server'
-
 import { api } from "@/lib/axios"
-import { getToken } from "@/lib/auth"
 
 export type Workspace = {
   id: string
@@ -20,15 +17,7 @@ type CreateWorkspaceResponse = {
 }
 
 export async function createWorkspace({ name }: CreateWorkspaceBody): Promise<CreateWorkspaceResponse> {
-  const token = await getToken()
-
-  const response = await api.post<CreateWorkspaceResponse>("/workspaces", { name },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  )
+  const response = await api.post<CreateWorkspaceResponse>("/workspaces", { name })
 
   return response.data
 }

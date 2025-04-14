@@ -1,6 +1,3 @@
-'use server'
-
-import { getToken } from "@/lib/auth"
 import { api } from "@/lib/axios"
 
 type GetWorkspacesResponse = {
@@ -15,13 +12,7 @@ type GetWorkspacesResponse = {
 }
 
 export async function getWorkspaces(): Promise<GetWorkspacesResponse> {
-  const token = await getToken()
-  
-  const response = await api.get('/workspaces', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
+  const response = await api.get('/workspaces')
 
   return response.data
 }
