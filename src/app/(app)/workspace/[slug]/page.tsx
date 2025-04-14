@@ -6,100 +6,14 @@ import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Plus, TrendingUp } from "lucide-react";
 
-const transactions = [
-  {
-    id: 1,
-    icon: "🏠️",
-    title: "Aluguel",
-    date: "01 de Abr, 2025",
-    amount: "R$1.000,00",
-  },
-  {
-    id: 2,
-    icon: "🍔",
-    title: "Alimentação",
-    date: "03 de Abr, 2025",
-    amount: "R$320,00",
-  },
-  {
-    id: 3,
-    icon: "💡",
-    title: "Energia",
-    date: "05 de Abr, 2025",
-    amount: "R$145,90",
-  },
-  {
-    id: 4,
-    icon: "📱",
-    title: "Celular",
-    date: "06 de Abr, 2025",
-    amount: "R$90,00",
-  },
-  {
-    id: 5,
-    icon: "🚌",
-    title: "Transporte",
-    date: "07 de Abr, 2025",
-    amount: "R$75,00",
-  },
-  {
-    id: 6,
-    icon: "🛒",
-    title: "Mercado",
-    date: "08 de Abr, 2025",
-    amount: "R$580,00",
-  },
-  {
-    id: 7,
-    icon: "🎮",
-    title: "Lazer",
-    date: "09 de Abr, 2025",
-    amount: "R$150,00",
-  },
-  {
-    id: 8,
-    icon: "💊",
-    title: "Farmácia",
-    date: "10 de Abr, 2025",
-    amount: "R$65,00",
-  },
-  {
-    id: 9,
-    icon: "💼",
-    title: "Investimento",
-    date: "11 de Abr, 2025",
-    amount: "R$1.200,00",
-  },
-  {
-    id: 10,
-    icon: "💻",
-    title: "Assinatura Software",
-    date: "12 de Abr, 2025",
-    amount: "R$89,99",
-  },
-  {
-    id: 11,
-    icon: "🎓",
-    title: "Educação",
-    date: "13 de Abr, 2025",
-    amount: "R$450,00",
-  },
-  {
-    id: 12,
-    icon: "☕",
-    title: "Café",
-    date: "14 de Abr, 2025",
-    amount: "R$18,00",
-  },
-]
-
-export default function Home() {
+export default function Workspace() {
   const expense = 50
   const investing = 30
   const saving = 20
 
   return (
     <main className="flex flex-col gap-4 p-4">
+      {/* <ExpensesChart /> */}
       <div className="flex items-center justify-between">
         <span className="text-sm text-muted-foreground font-medium">Despesas</span>
 

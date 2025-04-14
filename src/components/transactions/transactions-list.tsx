@@ -2,8 +2,9 @@
 
 import { useState } from 'react'
 import { Input } from '@/components/ui/input'
-import { Search } from 'lucide-react'
+import { FileText, Search } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Button } from '../ui/button'
 
 const transactions = [
   { id: 1, icon: "🏠️", title: "Aluguel", date: "01 de Abr, 2025", amount: "R$1.000,00" },

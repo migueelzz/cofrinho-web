@@ -1,10 +1,15 @@
+'use client'
+
 import { ChevronDown, Info, LogOut, Settings, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Separator } from "./ui/separator";
+import { useRouter } from "next/navigation";
 
 export function AccountMenu() {
+  const router = useRouter()
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -64,7 +69,7 @@ export function AccountMenu() {
         <Separator className="my-2" />
 
         <DropdownMenuItem asChild>
-          <Button variant="ghost" size="sm" className="w-full justify-start font-normal text-muted-foreground">
+          <Button onClick={() => router.replace('/sign-in')} variant="ghost" size="sm" className="w-full justify-start font-normal text-muted-foreground">
             <LogOut className="size-4" />
             Sair
           </Button>
