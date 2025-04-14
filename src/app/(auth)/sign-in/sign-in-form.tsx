@@ -2,8 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { AtSign, Eye, EyeOff } from "lucide-react"
-import Link from "next/link"
+import { Eye, EyeOff } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"

@@ -1,10 +1,10 @@
-// middleware.ts
 import { NextRequest, NextResponse } from 'next/server'
 
-// Define as rotas que exigem autenticação (já cobertas no matcher)
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get('token')?.value
+  const token = request.cookies.get('token') || null // Usar diretamente como um valor simples
   const pathname = request.nextUrl.pathname
+
+  console.log('Token:', token)
 
   const isAccessingRoot = pathname === '/'
   const isAccessingWorkspace = pathname.startsWith('/workspace/')
@@ -18,7 +18,6 @@ export function middleware(request: NextRequest) {
   return NextResponse.next()
 }
 
-// Executa o middleware apenas nas rotas protegidas
 export const config = {
   matcher: [
     '/',
