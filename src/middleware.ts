@@ -5,9 +5,9 @@ export function middleware(request: NextRequest) {
 
   console.log(token)
 
-  // if (!token) {
-  //   return NextResponse.redirect(new URL("/sign-in", request.url));
-  // }
+  if (!token) {
+    return NextResponse.redirect(new URL("/sign-in", request.url));
+  }
 
   return NextResponse.next()
 }
