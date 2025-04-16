@@ -5,9 +5,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Separator } from "./ui/separator";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 
 export function AccountMenu() {
+  const params = useParams<{ slug: string }>()
+  const slug = params.slug
+
   const router = useRouter()
 
   return (
@@ -46,23 +50,29 @@ export function AccountMenu() {
         <Separator className="my-2" />
 
         <DropdownMenuItem asChild>
-          <Button variant="ghost" size="sm" className="w-full justify-start font-normal text-muted-foreground">
-            <User className="size-4" />
-            Minha conta
+          <Button variant="ghost" size="sm" className="w-full justify-start font-normal text-muted-foreground" asChild>
+            <Link href={`/workspace/${slug}/settings`}>
+              <User className="size-4" />
+              Minha conta
+            </Link>
           </Button>
         </DropdownMenuItem>
 
         <DropdownMenuItem asChild>
-          <Button variant="ghost" size="sm" className="w-full justify-start font-normal text-muted-foreground">
-            <Settings className="size-4" />
-            Configurações
+          <Button variant="ghost" size="sm" className="w-full justify-start font-normal text-muted-foreground" asChild>
+            <Link href={`/workspace/${slug}/settings`}>
+              <Settings className="size-4" />
+              Configurações
+            </Link>
           </Button>
         </DropdownMenuItem>
 
         <DropdownMenuItem asChild>
-          <Button variant="ghost" size="sm" className="w-full justify-start font-normal text-muted-foreground">
-            <Info className="size-4" />
-            Ajuda
+          <Button variant="ghost" size="sm" className="w-full justify-start font-normal text-muted-foreground" asChild>
+            <Link href={`/workspace/${slug}/help`}>
+              <Info className="size-4" />
+              Ajuda
+            </Link>
           </Button>
         </DropdownMenuItem>
 

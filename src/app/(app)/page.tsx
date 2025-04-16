@@ -121,7 +121,9 @@ export default function SelectWorkspace() {
               </Avatar>
               <div>
                 <p className="font-medium">{workspace.name}</p>
-                <p className="text-xs text-muted-foreground">12 membros</p>
+                <p className="text-xs text-muted-foreground">
+                  {workspace.members.length} {workspace.members.length > 1 ? 'membros' : 'membro'}
+                </p>
               </div>
             </li>
           ))}

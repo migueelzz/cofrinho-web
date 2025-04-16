@@ -8,6 +8,10 @@ type GetWorkspacesResponse = {
     avatarUrl: string
     createdAt: string
     ownerId: string
+    members: {
+      userId: string
+      role: string
+    }[]
   }[]
 }
 

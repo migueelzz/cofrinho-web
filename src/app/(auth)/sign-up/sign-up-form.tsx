@@ -2,12 +2,16 @@
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { AtSign, Eye, EyeOff } from "lucide-react"
+import { AtSign, Eye, EyeOff, X } from "lucide-react"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
+import { useMutation } from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
+import { createAccount } from "@/http/create-account"
+import { toast } from "sonner"
 
 const signUpSchema = z.object({
   name: z.string().min(2, "Nome muito curto."),
@@ -18,6 +22,9 @@ const signUpSchema = z.object({
 type SignUpFormData = z.infer<typeof signUpSchema>
 
 export function SignUpForm() {
+  const router = useRouter()
+  
+  const [errorMessage, setErrorMessage] = useState("")
   const [showPassword, setShowPassword] = useState(false)
 
   const {
@@ -28,9 +35,31 @@ export function SignUpForm() {
     resolver: zodResolver(signUpSchema),
   })
 
-  const onSubmit = (data: SignUpFormData) => {
-    console.log("Formulário enviado:", data)
-    // lógica para criar conta aqui
+  const { mutateAsync: createAccountFn, isPending } = useMutation({
+    mutationFn: createAccount,
+  })
+
+  const onSubmit = async (data: SignUpFormData) => {
+    try {
+      setErrorMessage("")
+  
+      await createAccountFn({ name: data.name, email: data.email, password: data.password })
+  
+      toast.success("Cadastro realizado com sucesso!")
+  
+      router.push('/sign-in')
+    } catch (error: any) {
+      console.error(error)
+  
+      // Verifica a mensagem de erro retornada pela API
+      if (error.response?.data?.message === "User with same email already exists.") {
+        setErrorMessage("Já existe um usuário com este e-mail.")
+      } else {
+        setErrorMessage("Erro ao tentar cadastrar. Tente novamente.")
+      }
+  
+      toast.error(errorMessage)
+    }
   }
 
   const handleGoogleSignIn = () => {
@@ -39,7 +68,19 @@ export function SignUpForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 w-full mt-4">
-      <Button
+      {errorMessage && (
+        <div className="flex items-center justify-between w-full text-sm bg-rose-50 dark:bg-rose-900/20 rounded-md p-3 text-rose-500">
+          <span>
+            {errorMessage}
+          </span>
+
+          <button type="button" className="cursor-pointer" onClick={() => setErrorMessage("")}>     
+            <X className="size-4 text-rose-500" />
+          </button>
+        </div>
+      )}
+
+      {/* <Button
         type="button"
         variant="outline"
         className="w-full flex items-center justify-center gap-2"
@@ -56,7 +97,7 @@ export function SignUpForm() {
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-zinc-50 px-2 text-muted-foreground">ou</span>
         </div>
-      </div>
+      </div> */}
 
       <div className="flex flex-col gap-1">
         <Input placeholder="Nome" {...register("name")} />

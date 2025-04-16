@@ -2,31 +2,32 @@
 
 import { useState } from 'react'
 import { Input } from '@/components/ui/input'
-import { FileText, Search } from 'lucide-react'
+import { Loader2, Search } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Button } from '../ui/button'
+import { useQuery } from '@tanstack/react-query'
+import { getTransactions } from '@/http/get-transactions'
+import { useParams } from 'next/navigation'
 
-const transactions = [
-  { id: 1, icon: "🏠️", title: "Aluguel", date: "01 de Abr, 2025", amount: "R$1.000,00" },
-  { id: 2, icon: "🍔", title: "Alimentação", date: "03 de Abr, 2025", amount: "R$320,00" },
-  { id: 3, icon: "💡", title: "Energia", date: "05 de Abr, 2025", amount: "R$145,90" },
-  { id: 4, icon: "📱", title: "Celular", date: "06 de Abr, 2025", amount: "R$90,00" },
-  { id: 5, icon: "🚌", title: "Transporte", date: "07 de Abr, 2025", amount: "R$75,00" },
-  { id: 6, icon: "🛒", title: "Mercado", date: "08 de Abr, 2025", amount: "R$580,00" },
-  { id: 7, icon: "🎮", title: "Lazer", date: "09 de Abr, 2025", amount: "R$150,00" },
-  { id: 8, icon: "💊", title: "Farmácia", date: "10 de Abr, 2025", amount: "R$65,00" },
-  { id: 9, icon: "💼", title: "Investimento", date: "11 de Abr, 2025", amount: "R$1.200,00" },
-  { id: 10, icon: "💻", title: "Assinatura Software", date: "12 de Abr, 2025", amount: "R$89,99" },
-  { id: 11, icon: "🎓", title: "Educação", date: "13 de Abr, 2025", amount: "R$450,00" },
-  { id: 12, icon: "☕", title: "Café", date: "14 de Abr, 2025", amount: "R$18,00" },
-]
+import dayjs from 'dayjs'
+import { formatCurrencyBRL } from '@/utils/format-currency'
 
 export default function TransactionList() {
+  const params = useParams<{ slug: string }>()
+  const { slug } = params
+
   const [search, setSearch] = useState("")
 
-  const filtered = transactions.filter((transaction) =>
-    transaction.title.toLowerCase().includes(search.toLowerCase())
-  )
+  const { data, isLoading } = useQuery({
+    queryKey: ['transactions'],
+    queryFn: () => getTransactions({ slug }),
+    staleTime: 1000 * 60 * 10,
+    enabled: !!slug,
+  })
+
+  
+  const filtered = data ? data.transactions.filter((transaction) =>
+    transaction.description.toLowerCase().includes(search.toLowerCase())
+  ) : []
 
   return (
     <div className="flex flex-col gap-3 mt-6">
@@ -44,7 +45,14 @@ export default function TransactionList() {
 
       <div className="flex flex-col gap-3 p-3 border rounded-md bg-zinc-50">
         <AnimatePresence>
-          {filtered.length > 0 ? (
+          {!data && isLoading && (
+            <div className='flex items-center justify-center gap-2 text-muted-foreground text-sm p-4'>
+              <Loader2 className="size-4 animate-spin" />
+              <span>Carregando...</span>
+            </div>
+          )}
+
+          {filtered.length > 0 && (
             filtered.map((transaction) => (
               <motion.div
                 key={transaction.id}
@@ -56,17 +64,19 @@ export default function TransactionList() {
               >
                 <div className="flex items-center gap-2">
                   <div className="flex items-center justify-center size-8 rounded-full bg-white border">
-                    {transaction.icon}
+                    {transaction.category.emoji}
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-sm font-medium">{transaction.title}</span>
-                    <span className="text-xs text-muted-foreground">{transaction.date}</span>
+                    <span className="text-sm font-medium">{transaction.description}</span>
+                    <span className="text-xs text-muted-foreground">{dayjs(transaction.date).format('DD [de] MMM, YYYY')}</span>
                   </div>
                 </div>
-                <span className="text-sm font-medium">{transaction.amount}</span>
+                <span className="text-sm font-medium">{formatCurrencyBRL(transaction.amount)}</span>
               </motion.div>
             ))
-          ) : (
+          )}
+
+          {!isLoading && filtered.length === 0 && (
             <motion.p
               key="not-found"
               initial={{ opacity: 0 }}

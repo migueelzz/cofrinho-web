@@ -11,6 +11,7 @@ import { useState } from "react"
 import { authenticate } from "@/http/authenticate"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 const signInSchema = z.object({
   email: z.string().email("Digite um e-mail válido."),
@@ -119,7 +120,7 @@ export function SignInForm() {
         {isPending ? "Entrando..." : "Continuar"}
       </Button>
 
-      {/* <Button
+      <Button
         type="button"
         variant="secondary"
         className="w-full"
@@ -128,7 +129,7 @@ export function SignInForm() {
         <Link href='/sign-up'>
           Criar uma nova conta
         </Link>
-      </Button> */}
+      </Button>
     </form>
   )
 }
