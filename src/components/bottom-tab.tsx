@@ -3,12 +3,11 @@
 import { Home, Plus, User } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet"
+import { Sheet, SheetTrigger } from "./ui/sheet"
 import { Button } from "./ui/button"
-import { Input } from "./ui/input"
-import { Label } from "./ui/label"
 import { cn } from "@/lib/utils"
 import { AddTransactionSheet } from "./add-transaction-sheet"
+import { useState } from "react"
 
 const tabs = [
   { label: "Início", icon: Home, href: "/" },
@@ -18,6 +17,8 @@ const tabs = [
 
 export function BottomTab() {
   const pathname = usePathname()
+
+  const [isOpenTransactionSheet, setIsOpenTransactionSheet] = useState(false);
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t sm:hidden z-50">
@@ -37,14 +38,14 @@ export function BottomTab() {
           </span>
         </Link>
 
-        <Sheet>
+        <Sheet open={isOpenTransactionSheet} onOpenChange={setIsOpenTransactionSheet}>
           <SheetTrigger asChild>
             <Button size='icon' className="rounded-full">
               <Plus className="size-4" />
             </Button>
           </SheetTrigger>
 
-          <AddTransactionSheet />
+          <AddTransactionSheet onChangeOpen={setIsOpenTransactionSheet} />
         </Sheet>
 
         <Link href='/' className="flex flex-col items-center text-xs">
