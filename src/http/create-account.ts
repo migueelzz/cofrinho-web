@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios"
+import { api } from "./api-client"
 
 type CreateAccountBody = {
   name: string
@@ -10,12 +10,14 @@ type CreateAccountResponse = {
   userId: string
 }
 
-export async function createAccount({ name, email, password }: CreateAccountBody): Promise<CreateAccountResponse> {
-  const response = await api.post<CreateAccountResponse>("/users", {
-    name, 
-    email, 
-    password
-  })
+export async function createAccount({ name, email, password }: CreateAccountBody) {
+  const response = await api.post("users", {
+    json: {
+      name, 
+      email, 
+      password
+    }
+  }).json<CreateAccountResponse>()
 
-  return response.data
+  return response
 }

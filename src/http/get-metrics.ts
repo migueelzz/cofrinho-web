@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios"
+import { api } from "./api-client"
 
 type GetMetricsParams = {
   slug: string
@@ -28,8 +28,8 @@ export interface GetMetricsResponse {
 }
 
 
-export async function getMetrics({ slug }: GetMetricsParams): Promise<GetMetricsResponse> {
-  const response = await api.get(`/workspaces/${slug}/metrics`)
+export async function getMetrics({ slug }: GetMetricsParams) {
+  const response = await api.get(`workspaces/${slug}/metrics`).json<GetMetricsResponse>()
 
-  return response.data
+  return response
 }

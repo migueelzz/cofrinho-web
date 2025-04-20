@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios"
+import { api } from "./api-client"
 
 type AuthenticateParams = {
   email: string
@@ -9,11 +9,14 @@ type AuthenticateResponse = {
   token: string
 }
 
-export async function authenticate({ email, password }: AuthenticateParams): Promise<AuthenticateResponse> {
-  const response = await api.post('/sessions/password', {
-    email,
-    password,
+export async function authenticate({ email, password }: AuthenticateParams) {
+  const response = await api.post('sessions/password', {
+    json: {
+      email,
+      password,
+    }
   })
+  .json<AuthenticateResponse>()
 
-  return response.data
+  return response
 }

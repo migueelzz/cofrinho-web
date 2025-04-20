@@ -1,8 +1,11 @@
 import { PiggyBank } from "lucide-react";
 import { SignInForm } from "./sign-in-form";
 import Link from "next/link";
+import { getCurrentWorkspace } from "@/utils/get-current-workspace";
 
-export default function SignIn() {
+export default async function SignIn() {
+  const currentWorkspace = await getCurrentWorkspace()
+
   return (
     <div className="flex flex-col items-center gap-2 w-full max-w-sm mx-auto">
       <div className="flex items-center justify-center size-12 bg-background rounded-xl shadow-sm">
@@ -14,7 +17,7 @@ export default function SignIn() {
         Faça login para acessar o Cofrinho
       </span>
 
-      <SignInForm />
+      <SignInForm currentWorkspace={currentWorkspace} />
 
       <p className="mt-6 text-sm text-center text-muted-foreground">
         Ao clicar em continuar, você concorda com nossos{' '}

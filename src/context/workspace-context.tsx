@@ -11,7 +11,7 @@ interface Workspace {
 
 interface WorkspaceContextType {
   currentWorkspace: Workspace | null
-  setCurrentWorkspace: (workspace: Workspace) => void
+  setCurrentWorkspace: (workspace: Workspace | null) => void
 }
 
 const WorkspaceContext = createContext<WorkspaceContextType | undefined>(undefined)
@@ -28,9 +28,14 @@ export const WorkspaceProvider = ({ children }: { children: React.ReactNode }) =
     }
   }, [])
 
-  const setCurrentWorkspace = (workspace: Workspace) => {
-    setCurrentWorkspaceState(workspace)
-    localStorage.setItem('current-workspace', JSON.stringify(workspace))
+  const setCurrentWorkspace = (workspace: Workspace | null) => {
+    if (workspace) {
+      setCurrentWorkspaceState(workspace)
+      localStorage.setItem('current-workspace', JSON.stringify(workspace))
+    } else {
+      setCurrentWorkspaceState(null)
+      localStorage.removeItem('current-workspace')
+    }
   }
 
   return (

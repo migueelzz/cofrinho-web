@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios"
+import { api } from "./api-client"
 
 type CreateTransactionBody = {
   workspaceSlug: string
@@ -40,17 +40,19 @@ export async function createTransaction({
   isRecurring,
   recurrence,
   notifyUser,
-}: CreateTransactionBody): Promise<CreateTransactionResponse> {
-  const response = await api.post<CreateTransactionResponse>(`/workspaces/${workspaceSlug}/transactions`, {
-    amount,
-    description,
-    type,
-    date,
-    categoryId,
-    isRecurring,
-    recurrence,
-    notifyUser,
-  })
+}: CreateTransactionBody) {
+  const response = await api.post(`workspaces/${workspaceSlug}/transactions`, {
+    json: {
+      amount,
+      description,
+      type,
+      date,
+      categoryId,
+      isRecurring,
+      recurrence,
+      notifyUser,
+    }
+  }).json<CreateTransactionResponse>()
 
-  return response.data
+  return response
 }

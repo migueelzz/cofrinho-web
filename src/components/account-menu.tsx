@@ -7,12 +7,23 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Separator } from "./ui/separator";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { useMutation } from "@tanstack/react-query";
+import { signOut } from "@/http/sign-out";
 
 export function AccountMenu() {
-  const params = useParams<{ slug: string }>()
-  const slug = params.slug
+  const { slug } = useParams<{ slug: string }>()
 
   const router = useRouter()
+
+  async function handleSignOut() {
+    try {
+      await signOut()
+
+      router.replace("/sign-in")
+    } catch (error) {
+      console.error("Error signing out:", error)
+    }
+  }
 
   return (
     <DropdownMenu>
@@ -79,10 +90,10 @@ export function AccountMenu() {
         <Separator className="my-2" />
 
         <DropdownMenuItem asChild>
-          <Button onClick={() => router.replace('/sign-in')} variant="ghost" size="sm" className="w-full justify-start font-normal text-muted-foreground">
+          <a href="/api/auth/sign-out" className="text-muted-foreground">
             <LogOut className="size-4" />
             Sair
-          </Button>
+          </a>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

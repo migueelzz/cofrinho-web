@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios"
+import { api } from "./api-client"
 
 export type Workspace = {
   id: string
@@ -16,8 +16,12 @@ type CreateWorkspaceResponse = {
   workspace: Workspace
 }
 
-export async function createWorkspace({ name }: CreateWorkspaceBody): Promise<CreateWorkspaceResponse> {
-  const response = await api.post<CreateWorkspaceResponse>("/workspaces", { name })
+export async function createWorkspace({ name }: CreateWorkspaceBody) {
+  const response = await api.post<CreateWorkspaceResponse>("workspaces", {
+    json: {
+      name
+    }
+   }).json<CreateWorkspaceResponse>()
 
-  return response.data
+  return response
 }

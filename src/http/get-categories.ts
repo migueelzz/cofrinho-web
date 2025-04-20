@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios"
+import { api } from "./api-client"
 
 type GetCategoriesResponse = {
   categories: {
@@ -8,8 +8,8 @@ type GetCategoriesResponse = {
   }[]
 }
 
-export async function getCategories(): Promise<GetCategoriesResponse> {
-  const response = await api.get(`/categories`)
+export async function getCategories() {
+  const response = await api.get(`categories`).json<GetCategoriesResponse>()
 
-  return response.data
+  return response
 }

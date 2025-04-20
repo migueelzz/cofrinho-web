@@ -1,29 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { jwtVerify } from 'jose';
-
-const SECRET_KEY = new TextEncoder().encode(process.env.JWT_SECRET || '');
+import { verifyToken } from './utils/verify-token';
 
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const response = NextResponse.next();
+
   const token = request.cookies.get("token")?.value;
 
-  if (!token) {
-    return NextResponse.redirect(new URL("/sign-in", request.url));
-  }
-
-  try {
-    const { payload } = await jwtVerify(token, SECRET_KEY);
-
+  // Redireciona para "/" se o usuário autenticado acessar "/sign-in"
+  if (pathname === "/sign-in") {
+    if (token && await verifyToken(token)) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
     return NextResponse.next();
-  } catch (error) {
-    console.error("Erro ao validar o token:", error);
+  }
 
+  // Redireciona para "/sign-in" se o token for inválido ou inexistente
+  if (!token || !(await verifyToken(token))) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
+
+  // Salva o slug do workspace nos cookies ao acessar "/workspace/:slug"
+  if (pathname.startsWith('/workspace')) {
+    const slug = pathname.split('/')[2]; // Obtém o slug do workspace
+    if (slug) {
+      response.cookies.set('workspace', slug, { path: '/' }); // Salva o slug nos cookies
+    }
+  } else {
+    response.cookies.delete('workspace'); 
+  }
+
+  return response;
 }
 
 export const config = {
   matcher: [
     '/',
     '/workspace/:path*',
+    '/settings/:path*',
+    '/sign-in',
   ],
 };

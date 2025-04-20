@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios"
+import { api } from "./api-client"
 
 type GetProfileResponse = {
   user: {
@@ -10,8 +10,8 @@ type GetProfileResponse = {
   }
 }
 
-export async function getProfile(): Promise<GetProfileResponse> {
-  const response = await api.get('/profile')
+export async function getProfile() {
+  const response = await api.get('profile').json<GetProfileResponse>()
 
-  return response.data
+  return response
 }

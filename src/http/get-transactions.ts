@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios"
+import { api } from "./api-client"
 
 type GetTransactionsQuery = {
   slug: string
@@ -21,8 +21,12 @@ type GetTransactionsResponse = {
   }[]
 }
 
-export async function getTransactions({ slug }: GetTransactionsQuery): Promise<GetTransactionsResponse> {
-  const response = await api.get(`/workspaces/${slug}/transactions`)
+export async function getTransactions({ slug }: GetTransactionsQuery) {
+  const response = await api.get(`workspaces/${slug}/transactions`, {
+    next: {
+      tags: [`${slug}/transactions`],
+    },
+  }).json<GetTransactionsResponse>()
 
-  return response.data
+  return response
 }

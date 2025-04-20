@@ -2,70 +2,41 @@
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Eye, EyeOff } from "lucide-react"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
+import { AlertTriangle, Eye, EyeOff } from "lucide-react"
 import { useState } from "react"
-import { authenticate } from "@/http/authenticate"
-import { toast } from "sonner"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { useFormState } from "@/hooks/use-form-state"
+import { signInWithEmailAndPassword } from "./actions"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { useRouter } from "next/navigation"
 
-const signInSchema = z.object({
-  email: z.string().email("Digite um e-mail válido."),
-  password: z.string().min(8, "A senha deve ter no mínimo 8 caracteres."),
-})
-
-type SignInFormData = z.infer<typeof signInSchema>
-
-export function SignInForm() {
+export function SignInForm({ currentWorkspace }: { currentWorkspace: string | null }) {
   const router = useRouter()
-
-  const [errorMessage, setErrorMessage] = useState("")
   const [showPassword, setShowPassword] = useState(false)
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SignInFormData>({
-    resolver: zodResolver(signInSchema),
-  })
-
-  const { mutateAsync: authenticateFn, isPending } = useMutation({
-    mutationFn: authenticate,
-    onSuccess: (data) => {
-      // console.log("Token recebido:", data.token)
-    },
-    onError: (error) => {
-      setErrorMessage("Credenciais inválidas. Tente novamente.")
-      console.error("Erro ao autenticar:", error)
-    },
-  })
-
-  const onSubmit = async (data: SignInFormData) => {
-    try {
-      setErrorMessage("")
-
-      await authenticateFn({ email: data.email, password: data.password })
-
-      toast.success("Login realizado com sucesso!")
-
+  const [{ success, message, errors }, handleSubmit, isPending] = useFormState(
+    signInWithEmailAndPassword,
+    () => {
+      if (currentWorkspace) {
+        router.push(`/workspace/${currentWorkspace}`)
+      }
       router.push('/')
-    } catch (error) {
-      console.log(error)
-      toast.error("Erro ao fazer login. Tente novamente.")
     }
-  }
-
-  const handleGoogleSignIn = () => {
-    console.log("Login com Google")
-  }
+  )
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 w-full mt-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full mt-4">
+        {success === false && message && (
+          <Alert variant="destructive" className="bg-red-100 border-0">
+            <AlertTriangle className="size-4" />
+
+            <AlertTitle>Falha ao fazer login!</AlertTitle>
+            <AlertDescription>
+              <p>{message}</p>
+            </AlertDescription>
+          </Alert>
+        )}
+
       {/* <Button
         type="button"
         variant="outline"
@@ -87,18 +58,24 @@ export function SignInForm() {
 
       <div className="flex flex-col gap-1">
         <Input
+          id="email"
+          name="email"
           type="email"
           placeholder="Email"
-          {...register("email")}
         />
-        {errors.email && <span className="text-xs text-red-500">{errors.email.message}</span>}
+        {errors?.email && (
+          <p className="text-xs font-medium text-red-500 dark:text-red-400">
+            {errors.email[0]}
+          </p>
+        )}
       </div>
 
       <div className="flex flex-col gap-1 relative">
         <Input
+          id="password"
+          name="password"
           type={showPassword ? "text" : "password"}
           placeholder="Senha"
-          {...register("password")}
           className="pr-10"
         />
         <button
@@ -109,12 +86,12 @@ export function SignInForm() {
         >
           {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
         </button>
-        {errors.password && (
-          <span className="text-xs text-red-500">{errors.password.message}</span>
+        {errors?.password && (
+          <p className="text-xs font-medium text-red-500 dark:text-red-400">
+            {errors.password[0]}
+          </p>
         )}
       </div>
-
-      {errorMessage && <span className="text-sm text-red-500">{errorMessage}</span>}
 
       <Button type="submit" className="w-full" disabled={isPending}>
         {isPending ? "Entrando..." : "Continuar"}

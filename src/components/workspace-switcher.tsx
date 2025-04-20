@@ -13,24 +13,32 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
-import { useQuery } from '@tanstack/react-query'
 import { getWorkspaces } from '@/http/get-workspaces'
-import { useWorkspace } from '@/context/workspace-context'
+import { Skeleton } from './ui/skeleton'
+import { useQuery } from '@tanstack/react-query'
+import { useParams } from 'next/navigation'
 
 export function WorkspaceSwitcher() {
+  const { slug } = useParams<{
+    slug: string
+  }>()
+
+  console.log('slug', slug)
+
   const { data, isLoading } = useQuery({
-    queryKey: ['workspaces'],
-    queryFn: getWorkspaces,
+    queryKey: ['workspaces', slug],
+    queryFn: () => getWorkspaces(),
+    staleTime: 1000 * 60 * 10, // 10s
   })
 
-  const { currentWorkspace, setCurrentWorkspace } = useWorkspace()
+  console.log(data)
 
   const currentWork = data ? data.workspaces.find(
-    (workspace) => workspace.slug === currentWorkspace?.slug,
+    (workspace) => workspace.slug === slug,
   ) : null
 
-  const handleSelect = (workspace: any) => {
-    setCurrentWorkspace(workspace)
+  if (isLoading) {
+    return <Skeleton className='w-32 h-8' />
   }
 
   return (
@@ -67,7 +75,6 @@ export function WorkspaceSwitcher() {
             return (
               <DropdownMenuItem 
                 key={workspace.id} 
-                onClick={() => handleSelect(workspace)}
                 asChild
               >
                 <Link href={`/workspace/${workspace.slug}`}>
@@ -86,7 +93,7 @@ export function WorkspaceSwitcher() {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem asChild>
-          <Link href="/">
+          <Link href='/'>
             <PlusCircle className="mr-2 size-4" />
             Adicionar workspace
           </Link>

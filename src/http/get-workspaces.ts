@@ -1,6 +1,6 @@
-import { api } from "@/lib/axios"
+import { api } from "./api-client"
 
-type GetWorkspacesResponse = {
+export type GetWorkspacesResponse = {
   workspaces: {
     id: string
     name: string
@@ -15,8 +15,8 @@ type GetWorkspacesResponse = {
   }[]
 }
 
-export async function getWorkspaces(): Promise<GetWorkspacesResponse> {
-  const response = await api.get('/workspaces')
-
-  return response.data
+export async function getWorkspaces() {
+  const response = await api.get('workspaces').json<GetWorkspacesResponse>()
+  
+  return response
 }

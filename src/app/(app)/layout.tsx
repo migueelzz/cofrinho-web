@@ -12,12 +12,7 @@ export default function AppLayout({
 }>) {
   return (
     <div className="relative">
-      {/* <header className="fixed top-0 left-0 p-4">
-        <PiggyBank className="size-8 -rotate-12 text-zinc-700" />
-      </header> */}
-      <div className="flex items-center min-h-screen w-full justify-center px-4">
-        {children}
-      </div>
+      {children}
     </div>
   );
 }
