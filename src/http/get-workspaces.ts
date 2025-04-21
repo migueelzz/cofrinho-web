@@ -16,7 +16,12 @@ export type GetWorkspacesResponse = {
 }
 
 export async function getWorkspaces() {
-  const response = await api.get('workspaces').json<GetWorkspacesResponse>()
+  const response = await api.get('workspaces', {
+    next: {
+      tags: [`workspaces`],
+    },
+  })
+  .json<GetWorkspacesResponse>()
   
   return response
 }

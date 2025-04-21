@@ -1,16 +1,18 @@
 'use server'
 
 import { authenticate } from '@/http/authenticate'
+import { createAccount } from '@/http/create-account'
 import { HTTPError } from 'ky'
 import { cookies } from 'next/headers'
 import { z } from 'zod'
 
 const signInSchema = z.object({
+  name: z.string().min(2, "Nome muito curto."),
   email: z.string().email("Digite um e-mail válido."),
   password: z.string().min(8, "A senha deve ter no mínimo 8 caracteres."),
 })
 
-export async function signInWithEmailAndPassword(data: FormData) {
+export async function signUpAction(data: FormData) {
   const result = signInSchema.safeParse(Object.fromEntries(data))
 
   if (!result.success) {
@@ -19,23 +21,14 @@ export async function signInWithEmailAndPassword(data: FormData) {
     return { success: false, message: null, errors }
   }
 
-  const { email, password } = result.data
+  const { name, email, password } = result.data
 
   try {
-    const { token } = await authenticate({ email, password })
-
-    const cookieStore = await cookies()
-    cookieStore.set('token', token, { path: '/' })
-
-    // Redireciona para a página inicial ou workspace
-    const inviteId = cookieStore.get('inviteId')?.value
-
-    if (inviteId) {
-      try {
-        // await acceptInvite(inviteId)
-        cookieStore.delete('inviteId')
-      } catch {}
-    }
+    await createAccount({ 
+      name, 
+      email, 
+      password,
+    })
   } catch (error) {
     if (error instanceof HTTPError) {
       const { message } = await error.response.json()

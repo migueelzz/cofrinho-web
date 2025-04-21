@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { AlertTriangle, Eye, EyeOff } from "lucide-react"
+import { AlertTriangle, Eye, EyeOff, Loader2 } from "lucide-react"
 import { useState } from "react"
 import Link from "next/link"
 import { useFormState } from "@/hooks/use-form-state"
@@ -94,6 +94,7 @@ export function SignInForm({ currentWorkspace }: { currentWorkspace: string | nu
       </div>
 
       <Button type="submit" className="w-full" disabled={isPending}>
+        {isPending && <Loader2 className="size-4 animate-spin" />}
         {isPending ? "Entrando..." : "Continuar"}
       </Button>
 

@@ -12,7 +12,7 @@ export function AddTransaction() {
   return (
     <Sheet open={isOpenTransactionSheet} onOpenChange={setIsOpenTransactionSheet}>
       <SheetTrigger asChild>
-        <Button size='sm' className="hidden lg:flex">
+        <Button size='sm' className="hidden sm:flex">
           <Plus className="size-4" />
           <span>Adicionar transação</span>
         </Button>

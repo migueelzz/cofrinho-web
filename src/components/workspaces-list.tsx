@@ -1,11 +1,14 @@
-import { getWorkspaces } from "@/http/get-workspaces"
+import { GetWorkspacesResponse } from "@/http/get-workspaces"
 import Link from "next/link"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { Skeleton } from "./ui/skeleton"
 
-export async function WorkspacesList() {
-  const { workspaces } = await getWorkspaces()
+type WorkspacesListProps = {
+  workspaces: GetWorkspacesResponse["workspaces"] | undefined
+}
 
+export async function WorkspacesList({ workspaces }: WorkspacesListProps) {
+  
   if (!workspaces) {
     return <Skeleton className="w-full h-12" />
   }

@@ -29,7 +29,8 @@ export interface GetMetricsResponse {
 
 
 export async function getMetrics({ slug }: GetMetricsParams) {
-  const response = await api.get(`workspaces/${slug}/metrics`).json<GetMetricsResponse>()
+  const response = await api.get(`workspaces/${slug}/metrics`)
+  .json<GetMetricsResponse>()
 
   return response
 }

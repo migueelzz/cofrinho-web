@@ -23,15 +23,12 @@ export function WorkspaceSwitcher() {
     slug: string
   }>()
 
-  console.log('slug', slug)
-
   const { data, isLoading } = useQuery({
     queryKey: ['workspaces', slug],
     queryFn: () => getWorkspaces(),
     staleTime: 1000 * 60 * 10, // 10s
+    enabled: !!slug,
   })
-
-  console.log(data)
 
   const currentWork = data ? data.workspaces.find(
     (workspace) => workspace.slug === slug,
@@ -93,7 +90,7 @@ export function WorkspaceSwitcher() {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem asChild>
-          <Link href='/'>
+          <Link href='/create-workspace'>
             <PlusCircle className="mr-2 size-4" />
             Adicionar workspace
           </Link>

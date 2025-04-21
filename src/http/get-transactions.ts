@@ -23,9 +23,9 @@ type GetTransactionsResponse = {
 
 export async function getTransactions({ slug }: GetTransactionsQuery) {
   const response = await api.get(`workspaces/${slug}/transactions`, {
-    next: {
-      tags: [`${slug}/transactions`],
-    },
+    // next: {
+    //   tags: [`${slug}/transactions`],
+    // },
   }).json<GetTransactionsResponse>()
 
   return response
