@@ -19,9 +19,10 @@ export function Summary() {
   const slug = params.slug;
 
   const { data, isLoading } = useQuery({
-    queryKey: ["summary"],
+    queryKey: ["summary", slug],
     queryFn: () => getMetrics({ slug }),
     staleTime: 1000 * 60 * 10,
+    enabled: !!slug,
   });
 
   return (
@@ -94,6 +95,28 @@ export function Summary() {
               </Tooltip>
             </TooltipProvider>
           </div>
+
+          {/* Legendas */}
+          {data.netBalance > 0 ? (
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <span className="size-3 rounded-full border-2 border-rose-300 bg-rose-500" />
+                <span className="text-xs text-muted-foreground font-medium">Despesas</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="size-3 rounded-full border-2 border-purple-300 bg-purple-500" />
+                <span className="text-xs text-muted-foreground font-medium">Investimentos</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="size-3 rounded-full border-2 border-amber-300 bg-amber-500" />
+                <span className="text-xs text-muted-foreground font-medium">Poupança</span>
+              </div>
+            </div>
+          ) : (
+            <span className="text-sm text-muted-foreground">Nenhuma métrica por enquanto...</span>
+          )}
         </>
       )}
 
@@ -108,24 +131,6 @@ export function Summary() {
           </div>
         </div>
       )}
-
-      {/* Legendas */}
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2">
-          <span className="size-3 rounded-full border-2 border-rose-300 bg-rose-500" />
-          <span className="text-xs text-muted-foreground font-medium">Despesas</span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="size-3 rounded-full border-2 border-purple-300 bg-purple-500" />
-          <span className="text-xs text-muted-foreground font-medium">Investimentos</span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="size-3 rounded-full border-2 border-amber-300 bg-amber-500" />
-          <span className="text-xs text-muted-foreground font-medium">Poupança</span>
-        </div>
-      </div>
     </div>
   );
 }

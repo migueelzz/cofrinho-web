@@ -1,6 +1,6 @@
 import { AddTransaction } from "@/components/add-transaction";
 import { Summary } from "@/components/summary";
-import TransactionList from "@/components/transactions/transactions-list";
+import { TransactionList } from "@/components/transactions/transactions-list";
 
 export default function Workspace() {
 

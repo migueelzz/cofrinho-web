@@ -11,14 +11,14 @@ import { useParams } from 'next/navigation'
 import dayjs from 'dayjs'
 import { formatCurrencyBRL } from '@/utils/format-currency'
 
-export default function TransactionList() {
+export function TransactionList() {
   const params = useParams<{ slug: string }>()
   const { slug } = params
 
   const [search, setSearch] = useState("")
 
   const { data, isLoading } = useQuery({
-    queryKey: ['transactions'],
+    queryKey: ['transactions', slug],
     queryFn: () => getTransactions({ slug }),
     staleTime: 1000 * 60 * 10,
     enabled: !!slug,
