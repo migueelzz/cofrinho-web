@@ -6,8 +6,8 @@ import { usePathname } from "next/navigation"
 import { Sheet, SheetTrigger } from "./ui/sheet"
 import { Button } from "./ui/button"
 import { cn } from "@/lib/utils"
-import { AddTransactionSheet } from "./add-transaction-sheet"
 import { useState } from "react"
+import { AddTransactionSheet } from "@/app/(app)/workspace/[slug]/(transactions)/add-transaction-sheet"
 
 const tabs = [
   { label: "Início", icon: Home, href: "/" },
@@ -45,7 +45,7 @@ export function BottomTab() {
             </Button>
           </SheetTrigger>
 
-          <AddTransactionSheet onChangeOpen={setIsOpenTransactionSheet} />
+          <AddTransactionSheet open={isOpenTransactionSheet} onChangeOpen={setIsOpenTransactionSheet} />
         </Sheet>
 
         <Link href='/' className="flex flex-col items-center text-xs">

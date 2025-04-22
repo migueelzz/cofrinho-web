@@ -1,9 +1,9 @@
-import { AddTransaction } from "@/components/add-transaction";
 import { Summary } from "@/components/summary";
-import { TransactionList } from "@/components/transactions/transactions-list";
+import { TransactionList } from "@/app/(app)/workspace/[slug]/(transactions)/transactions-list";
+import { AddTransaction } from "./(transactions)/add-transaction";
 
-export default function Workspace() {
-
+export default async function Workspace({ params }: { params: { slug: string } }) {
+  const { slug } = await params;
 
   return (
     <main className="flex flex-col gap-4 p-4">
@@ -31,7 +31,7 @@ export default function Workspace() {
 
       </div>
 
-      <Summary />
+      <Summary slug={slug} />
 
       <TransactionList />
     </main>

@@ -37,25 +37,6 @@ export function SignUpForm() {
         </Alert>
       )}
 
-      {/* <Button
-        type="button"
-        variant="outline"
-        className="w-full flex items-center justify-center gap-2"
-        onClick={handleGoogleSignIn}
-      >
-        <AtSign className="size-4" />
-        Continuar com Google
-      </Button>
-
-      <div className="relative my-2">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-zinc-50 px-2 text-muted-foreground">ou</span>
-        </div>
-      </div> */}
-
       <div className="flex flex-col gap-1">
         <Input id="name" name="name" placeholder="Nome" />
         {errors?.name && (

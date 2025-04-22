@@ -9,7 +9,6 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { EmojiPicker } from "./emoji-picker"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
@@ -36,10 +35,11 @@ const transactionSchema = z.object({
 type TransactionFormValues = z.infer<typeof transactionSchema>
 
 type AddTransactionSheetProps = {
+  open: boolean
   onChangeOpen: (open: boolean) => void
 }
 
-export function AddTransactionSheet({ onChangeOpen }: AddTransactionSheetProps) {
+export function AddTransactionSheet({ open, onChangeOpen }: AddTransactionSheetProps) {
   const queryClient = useQueryClient()
 
   const isMobile = useIsMobile()
@@ -48,6 +48,7 @@ export function AddTransactionSheet({ onChangeOpen }: AddTransactionSheetProps) 
     queryKey: ["categories"],
     queryFn: getCategories,
     staleTime: 1000 * 60 * 10,
+    enabled: open,
   })
 
   const params = useParams<{ slug: string }>()
@@ -126,14 +127,21 @@ export function AddTransactionSheet({ onChangeOpen }: AddTransactionSheetProps) 
                     <SelectValue placeholder="Selecione uma categoria" />
                   </SelectTrigger>
                   <SelectContent className="max-h-60">
+                    {data ? (
                     <SelectGroup>
                       <SelectLabel>Categorias</SelectLabel>
-                      {data?.categories.map((category) => (
+                      {data.categories.map((category) => (
                         <SelectItem key={category.id} value={category.id}>
                           {category.emoji} {category.name}
                         </SelectItem>
                       ))}
                     </SelectGroup>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <Loader2 className="size-4 animate-spin" />
+                        <p className="text-sm text-muted-foreground">Carregando categorias...</p>
+                      </div>
+                    )}
                   </SelectContent>
                 </Select>
               )}

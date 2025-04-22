@@ -14,10 +14,12 @@ import { Skeleton } from "./ui/skeleton";
 
 import { formatCurrencyBRL } from "@/utils/format-currency";
 
-export function Summary() {
-  const params = useParams<{ slug: string }>();
-  const slug = params.slug;
+type SummaryProps = {
+  slug: string;
+}
 
+export function Summary({ slug }: SummaryProps) {
+  
   const { data, isLoading } = useQuery({
     queryKey: ["summary", slug],
     queryFn: () => getMetrics({ slug }),
@@ -97,7 +99,7 @@ export function Summary() {
           </div>
 
           {/* Legendas */}
-          {data.netBalance > 0 ? (
+          {data.expense.total !== 0 ? (
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <span className="size-3 rounded-full border-2 border-rose-300 bg-rose-500" />

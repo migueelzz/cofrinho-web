@@ -27,7 +27,7 @@ export async function WorkspacesList({ workspaces }: WorkspacesListProps) {
           <Link
             key={workspace.id}
             href={`/workspace/${workspace.slug}`}
-            className="flex items-center gap-2 rounded-lg p-3 hover:bg-muted transition cursor-pointer"
+            className="flex items-center gap-2 rounded-lg p-3 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition cursor-pointer"
           >
             <Avatar>
               {workspace.avatarUrl && (

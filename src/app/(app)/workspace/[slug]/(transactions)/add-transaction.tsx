@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from "react";
-import { Sheet, SheetTrigger } from "./ui/sheet";
-import { Button } from "./ui/button";
 import { Plus } from "lucide-react";
 import { AddTransactionSheet } from "./add-transaction-sheet";
+import { Sheet, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 
 export function AddTransaction() {
   const [isOpenTransactionSheet, setIsOpenTransactionSheet] = useState(false);
@@ -18,7 +18,7 @@ export function AddTransaction() {
         </Button>
       </SheetTrigger>
 
-      <AddTransactionSheet onChangeOpen={setIsOpenTransactionSheet} />
+      <AddTransactionSheet open={isOpenTransactionSheet} onChangeOpen={setIsOpenTransactionSheet} />
     </Sheet>
   )
 }

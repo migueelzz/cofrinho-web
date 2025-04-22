@@ -22,13 +22,10 @@ export default async function Home() {
       <div className="max-w-md w-full space-y-6">
         <WorkspacesList workspaces={workspaces} />
 
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-zinc-50 px-2 text-muted-foreground">ou</span>
-          </div>
+        <div className='flex items-center gap-2'>
+          <div className='bg-muted w-full h-px' />
+          <span className='text-muted-foreground text-sm'>ou</span>
+          <div className='bg-muted w-full h-px' />
         </div>
 
         <Button className='w-full' asChild>
