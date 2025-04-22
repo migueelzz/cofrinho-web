@@ -2,9 +2,7 @@ import { Summary } from "@/components/summary";
 import { TransactionList } from "@/app/(app)/workspace/[slug]/(transactions)/transactions-list";
 import { AddTransaction } from "./(transactions)/add-transaction";
 
-export default async function Workspace({ params }: { params: { slug: string } }) {
-  const { slug } = await params;
-
+export default function Workspace() {
   return (
     <main className="flex flex-col gap-4 p-4">
       {/* <ExpensesChart /> */}
@@ -28,10 +26,9 @@ export default async function Workspace({ params }: { params: { slug: string } }
 
           <AddTransaction />
         </div>
-
       </div>
 
-      <Summary slug={slug} />
+      <Summary />
 
       <TransactionList />
     </main>

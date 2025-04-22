@@ -17,7 +17,7 @@ Com ele, você pode:
 
 ---
 
-## 📋 Funcionalidades
+## Funcionalidades
 
 - [x] Criação de workspaces
 - [x] Registro de transações financeiras
@@ -27,7 +27,7 @@ Com ele, você pode:
 
 ---
 
-## 🚀 Comece agora
+## Executar
 
 Clone o repositório e instale as dependências:
 
@@ -39,7 +39,7 @@ pnpm install
 pnpm dev
 ```
 
-cofrBackend: [github.com/migueelzz/cofrinho-backend](https://github.com/migueelzz/cofrinho-backend)
+Backend: [github.com/migueelzz/cofrinho-backend](https://github.com/migueelzz/cofrinho-backend)
 
 ---
 

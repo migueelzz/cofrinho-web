@@ -14,11 +14,9 @@ import { Skeleton } from "./ui/skeleton";
 
 import { formatCurrencyBRL } from "@/utils/format-currency";
 
-type SummaryProps = {
-  slug: string;
-}
-
-export function Summary({ slug }: SummaryProps) {
+export function Summary() {
+  const params = useParams<{ slug: string }>();
+  const { slug } = params;
   
   const { data, isLoading } = useQuery({
     queryKey: ["summary", slug],
