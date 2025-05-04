@@ -17,16 +17,6 @@ Com ele, você pode:
 
 ---
 
-## Funcionalidades
-
-- [x] Criação de workspaces
-- [x] Registro de transações financeiras
-- [ ] Criação de metas financeiras
-- [ ] Visualização de despesas mensais
-- [ ] Geração de insights personalizados
-
----
-
 ## Executar
 
 Clone o repositório e instale as dependências:

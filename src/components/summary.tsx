@@ -1,44 +1,98 @@
 'use client'
 
-import { TrendingUp } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight, Plus } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
-import { getMetrics } from "@/http/get-metrics";
-import { Skeleton } from "./ui/skeleton";
+import { GetMetricsResponse } from "@/http/get-metrics";
 
 import { formatCurrencyBRL } from "@/utils/format-currency";
+import { cn } from "@/lib/utils";
+import { Button } from "./ui/button";
 
-export function Summary() {
-  const params = useParams<{ slug: string }>();
-  const { slug } = params;
-  
-  const { data, isLoading } = useQuery({
-    queryKey: ["summary", slug],
-    queryFn: () => getMetrics({ slug }),
-    staleTime: 1000 * 60 * 10,
-    enabled: !!slug,
-  });
+type SummaryProps = {
+  data: GetMetricsResponse
+}
 
+export function Summary({ data }: SummaryProps) {
   return (
     <div className="flex flex-col gap-4">
       {data && (
         <>
-          <div className="flex flex-col gap-1">
-            <span className="text-xs font-medium text-muted-foreground">Saldo total</span>
-            <div className="flex items-baseline gap-3">
-              <h1 className="text-4xl font-extrabold">{formatCurrencyBRL(data.netBalance)}</h1>
-              {/* <div className="flex items-center gap-1 text-sm font-medium text-emerald-600">
-                <TrendingUp className="size-3" />
-                <span>{formatCurrencyBRL(200)}</span>
-              </div> */}
+          <div className="flex flex-col gap-2">
+            <span className="text-xs font-medium text-muted-foreground">Orçamento mensal</span>
+            {data.budget ? (
+              <div className="flex items-baseline gap-3">
+                <h1 className={cn("text-4xl font-bold")}>
+                  {formatCurrencyBRL(data.budget ? data.budget.remaining : 0)}
+                </h1>
+              </div>
+            ) : (
+              <Button variant='outline' className="w-min">
+                <Plus className="size-4" />
+                Definir orçamento mensal
+              </Button>
+            )}
+          </div>
+
+          <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4 my-4">
+            <div className="flex flex-col gap-3">
+              <div className="space-y-1">
+                <span className="text-xs font-medium text-emerald-600">Receita</span>
+                <p className="text-2xl font-semibold">
+                  {formatCurrencyBRL(data.totalIncome)}
+                </p>
+              </div>
+              <div className="flex items-center gap-1">
+                <ArrowUpRight className="size-4 text-emerald-600" />
+                <span className="text-xs text-muted-foreground">12% Em relação ao último mês</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <div className="space-y-1">
+                <span className="text-xs font-medium text-rose-600">Despesas</span>
+                <p className="text-2xl font-semibold">
+                  {formatCurrencyBRL(data.expense.total)}
+                </p>
+              </div>
+              <div className="flex items-center gap-1">
+                <ArrowDownLeft className="size-4 text-rose-600" />
+                <span className="text-xs text-muted-foreground">-8% Em relação ao último mês</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <div className="space-y-1">
+                <span className="text-xs font-medium text-purple-600">Investimentos</span>
+                <p className="text-2xl font-semibold">
+                  {formatCurrencyBRL(data.investment.total)}
+                </p>
+              </div>
+              <div className="flex items-center gap-1">
+                <ArrowUpRight className="size-4 text-emerald-600" />
+                <span className="text-xs text-muted-foreground">4% Em relação ao último mês</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <div className="space-y-1">
+                <span className="text-xs font-medium text-amber-400">Poupança</span>
+                <p className="text-2xl font-semibold">
+                  {formatCurrencyBRL(data.saving.total)}
+                </p>
+              </div>
+              <div className="flex items-center gap-1">
+                <ArrowUpRight className="size-4 text-emerald-600" />
+                <span className="text-xs text-muted-foreground">2% Em relação ao último mês</span>
+              </div>
             </div>
           </div>
+
+          {/* <SummaryChart /> */}
 
           <div className="flex items-center gap-1">
             <TooltipProvider>
@@ -101,35 +155,23 @@ export function Summary() {
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <span className="size-3 rounded-full border-2 border-rose-300 bg-rose-500" />
-                <span className="text-xs text-muted-foreground font-medium">Despesas</span>
+                <span className="text-xs text-muted-foreground">Despesas</span>
               </div>
 
               <div className="flex items-center gap-2">
                 <span className="size-3 rounded-full border-2 border-purple-300 bg-purple-500" />
-                <span className="text-xs text-muted-foreground font-medium">Investimentos</span>
+                <span className="text-xs text-muted-foreground">Investimentos</span>
               </div>
 
               <div className="flex items-center gap-2">
                 <span className="size-3 rounded-full border-2 border-amber-300 bg-amber-500" />
-                <span className="text-xs text-muted-foreground font-medium">Poupança</span>
+                <span className="text-xs text-muted-foreground">Poupança</span>
               </div>
             </div>
           ) : (
             <span className="text-sm text-muted-foreground">Nenhuma métrica por enquanto...</span>
           )}
         </>
-      )}
-
-      {!data && isLoading && (
-        <div className="flex flex-col gap-2">
-          <Skeleton className="w-60 h-10" />
-
-          <div className="flex items-center gap-2">
-            <Skeleton className="w-full h-3 rounded-full" />
-            <Skeleton className="w-full h-3 rounded-full" />
-            <Skeleton className="w-1/3 h-3 rounded-full" />
-          </div>
-        </div>
       )}
     </div>
   );

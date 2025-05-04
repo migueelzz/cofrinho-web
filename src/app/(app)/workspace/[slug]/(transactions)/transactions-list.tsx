@@ -1,82 +1,59 @@
 'use client'
 
-import { useState } from 'react'
-import { Input } from '@/components/ui/input'
-import { Loader2, Search } from 'lucide-react'
+import { ArrowDownLeft, ArrowUpRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useQuery } from '@tanstack/react-query'
-import { getTransactions } from '@/http/get-transactions'
-import { useParams } from 'next/navigation'
+import { GetTransactionsResponse } from '@/http/get-transactions'
 
 import dayjs from 'dayjs'
 import { formatCurrencyBRL } from '@/utils/format-currency'
+import { cn } from '@/lib/utils'
 
-export function TransactionList() {
-  const params = useParams<{ slug: string }>()
-  const { slug } = params
+type TransactionListProps = {
+  data: GetTransactionsResponse
+}
 
-  const [search, setSearch] = useState("")
-
-  const { data, isLoading } = useQuery({
-    queryKey: ['transactions', slug],
-    queryFn: () => getTransactions({ slug }),
-    staleTime: 1000 * 60 * 10,
-    enabled: !!slug,
-  })
-
-  
-  const filtered = data ? data.transactions.filter((transaction) =>
-    transaction.description.toLowerCase().includes(search.toLowerCase())
-  ) : []
-
+export function TransactionList({ data }: TransactionListProps) {
   return (
-    <div className="flex flex-col gap-3 mt-6">
+    <div className="flex flex-col gap-2 mt-6">
       <span className="text-muted-foreground text-sm">Recentes</span>
 
-      <div className="relative h-9">
-        <Input
-          className="ps-9 placeholder:text-sm"
-          placeholder="Buscar por transações..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <Search className="absolute pointer-events-none top-1/2 -translate-y-1/2 left-3 size-4 text-muted-foreground" />
-      </div>
-
-      <div className="flex flex-col gap-3 p-3 border rounded-md bg-zinc-50">
+      <div className="flex flex-col">
         <AnimatePresence>
-          {!data && isLoading && (
-            <div className='flex items-center justify-center gap-2 text-muted-foreground text-sm p-4'>
-              <Loader2 className="size-4 animate-spin" />
-              <span>Carregando...</span>
-            </div>
-          )}
-
-          {filtered.length > 0 && (
-            filtered.map((transaction) => (
+          {data.items.map((transaction) => (
               <motion.div
                 key={transaction.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.2 }}
-                className="flex items-center justify-between"
+                className="flex items-center justify-between border-b last:border-b-0 py-2"
               >
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center justify-center size-8 rounded-full bg-white border">
-                    {transaction.category.emoji}
-                  </div>
+                <div className="flex items-center gap-3">
+                  {transaction.type === 'INCOME' ? (
+                    <ArrowUpRight className="size-5 text-emerald-500" />
+                  ) : (
+                    <ArrowDownLeft className="size-5 text-rose-500" />
+                  )}
+
                   <div className="flex flex-col">
                     <span className="text-sm font-medium">{transaction.description}</span>
                     <span className="text-xs text-muted-foreground">{dayjs(transaction.date).format('DD [de] MMM, YYYY')}</span>
                   </div>
+
+                  <div className="flex items-center justify-center gap-1 w-min py-1 px-2 text-xs whitespace-nowrap rounded-full border">
+                    <span>{transaction.category.emoji}</span>
+                    <span>{transaction.category.name}</span>
+                  </div>
                 </div>
-                <span className="text-sm font-medium">{formatCurrencyBRL(transaction.amount)}</span>
+                <span className={cn("text-sm", transaction.type === 'INCOME' ? 'text-emerald-500 font-medium' : 'text-muted-foreground')}>
+                  {transaction.type === 'INCOME' ? '+' : '-'}
+                  {formatCurrencyBRL(transaction.amount)}
+                </span>
               </motion.div>
             ))
-          )}
+          }
 
-          {!isLoading && filtered.length === 0 && (
+          {data.items.length === 0 && (
             <motion.p
               key="not-found"
               initial={{ opacity: 0 }}
